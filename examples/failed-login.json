@@ -1,0 +1,18 @@
+{
+  "note": "Synthetic decoded event for documentation; not a full eventchannel replay fixture or live evidence.",
+  "win": {
+    "system": {
+      "eventID": "4625",
+      "channel": "Security",
+      "providerName": "Microsoft-Windows-Security-Auditing"
+    },
+    "eventdata": {
+      "logonType": "3",
+      "targetUserName": "lab_test",
+      "ipAddress": "192.0.2.10",
+      "authenticationPackageName": "NTLM",
+      "status": "0xc000006d",
+      "subStatus": "0xc000006a"
+    }
+  }
+}

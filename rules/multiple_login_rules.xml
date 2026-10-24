@@ -1,0 +1,20 @@
+<group name="windows,multiple_login,authentication,">
+  <!-- Reconstructed from the author's lab; verify rule 60122 on your version. -->
+  <rule id="100201" level="7">
+    <if_sid>60122</if_sid>
+    <field name="win.system.eventID">^4625$</field>
+    <field name="win.eventdata.logonType">^3$</field>
+    <field name="win.eventdata.ipAddress" type="pcre2">^(?!-$)(?!0\.0\.0\.0$)(?!::$)\S+$</field>
+    <description>Network login failure from $(win.eventdata.ipAddress)</description>
+    <mitre><id>T1110</id></mitre>
+    <group>multiple_login_failure,authentication_failed,</group>
+  </rule>
+
+  <rule id="100202" level="12" frequency="5" timeframe="120">
+    <if_matched_sid>100201</if_matched_sid>
+    <same_field>win.eventdata.ipAddress</same_field>
+    <description>Multiple login failures from same source IP: $(win.eventdata.ipAddress)</description>
+    <mitre><id>T1110</id></mitre>
+    <group>multiple_login_failure,possible_bruteforce,</group>
+  </rule>
+</group>
