@@ -107,4 +107,4 @@ Run each case independently and retain raw events. The JSON in examples/failed-l
 
 ## Evidence to retain
 
-Capture the real Event 4625, single-failure alert, correlation alert, timestamps and source address. Redact unrelated account names and host identifiers before publishing screenshots. No screenshots or live alerts are included in this reconstruction.
+Capture the real Event 4625, single-failure alert, correlation alert, timestamps and source address. Redact unrelated account names and host identifiers before publishing screenshots. Historical screenshots are included in the README walkthrough. They document the earlier lab, not a live test of the revised repository files.

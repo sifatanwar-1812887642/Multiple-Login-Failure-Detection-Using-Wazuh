@@ -18,6 +18,62 @@ flowchart TD
     D --> E["Rule 100202: multiple login failure alert"]
 ```
 
+## Screenshot walkthrough
+
+These six original screenshots were extracted from the author's implementation report. Follow the numbered steps to see how login failures become a higher-severity alert.
+
+The images retain the historical lab's RDP labels and test commands. The project title remains **Multiple Login Failure Detection Using Wazuh**. Images show historical results, not a fresh execution of the revised repository rules.
+
+### 1. Check that events appear in Wazuh
+
+![Wazuh Threat Hunting dashboard showing collected lab events and rule 100201](assets/screenshots/event-collection.png)
+
+**Look at:** the event timeline, the results table, and the **100201** rule ID.
+
+**What it means:** the endpoint's events reached Wazuh and a custom single-failure alert is visible. The **588 hits** value is the dashboard's selected result count; it is not proof of 588 failed logins in one attack.
+
+### 2. Open a single login-failure alert
+
+![Document Details panel showing rule 100201 at level 7](assets/screenshots/single-login-alert.png)
+
+**Look at:** **rule.id = 100201**, **rule.level = 7**, and the rule description.
+
+**What it means:** Wazuh identified one qualifying network authentication failure. A single wrong password does not establish a brute-force attack. This image shows alert details; it is not a Windows Event Viewer screenshot of Event 4625.
+
+### 3. Generate controlled failed authentications in the lab
+
+![Lab terminal showing five controlled authentication attempts](assets/screenshots/controlled-attempts.png)
+
+**Look at:** the output **Attempt 1** through **Attempt 5**.
+
+**What it means:** the test source ran five deliberate attempts against a dedicated lab endpoint. The original screenshot uses a remote desktop client as the test transport. Terminal output alone does not prove five events were collected; verify the Windows events and Wazuh alerts as well.
+
+### 4. Find the multiple-login alert
+
+![Wazuh alert list with rule 100202 at level 12 and earlier 100201 alerts](assets/screenshots/multiple-login-alert.png)
+
+**Look at:** **100202** with severity **12**, alongside earlier **100201** alerts with severity **7**.
+
+**What it means:** the historical lab produced a higher-severity correlation alert after repeated failures. Compare source addresses and timestamps in the full event details to verify the same-IP, 120-second condition; the list view alone does not display all those fields.
+
+### 5. Inspect the historical firewall block
+
+![Windows firewall summary showing an enabled inbound block for lab source 10.0.2.7](assets/screenshots/firewall-summary.png)
+
+**Look at:** **Enabled: True**, **Direction: Inbound**, **Action: Block**, and **RemoteAddress: 10.0.2.7**.
+
+**What it means:** the historical Windows endpoint had an enabled firewall block for that lab source. This is evidence of the rule's presence, not proof by itself that Wazuh created it automatically or that traffic was blocked in a connection test.
+
+### 6. Check the detailed firewall state
+
+![Detailed Windows firewall output showing the block rule and successful policy-store parsing](assets/screenshots/firewall-details.png)
+
+**Look at:** the rule's display name, enabled state, action, and the successful policy-store status.
+
+**What it means:** Windows accepted the firewall rule into its policy store. The repository currently provides detection only; the original response integration needs the fixes described in [Response notes](docs/RESPONSE.md). These screenshots do not demonstrate timed removal or a complete add/delete response workflow.
+
+For commands to reproduce and verify the detection, continue to [Setup and verification](docs/SETUP.md).
+
 ## Lab environment
 
 | Component | Recorded lab configuration |
